@@ -1,0 +1,20 @@
+group 'deimos'
+version '0.0.0'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+dependencies {
+    compile "org.lwjgl:lwjgl:+"
+    compile "org.lwjgl:lwjgl-platform:+:natives-windows"
+    compile "org.joml:joml:+"
+    compile "org.l33tlabs.twl:pngdecoder:+"
+    compile "com.intellij:annotations:+"
+    compile "org.ini4j:ini4j:+"
+    testCompile "com.intellij:annotations:+"
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
