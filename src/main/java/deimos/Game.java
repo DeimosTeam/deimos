@@ -23,7 +23,7 @@ public class Game extends ComponentHolder {
         loadComponents(this, null, null);
 
         if (startScene != null)
-            startScene.load();
+            startScene.load(this);
     }
 
 }

@@ -21,7 +21,8 @@ public class Engine {
     private List<Component> newComponents;
 
     public static void start(Game game) {
-        if (o != null) throw new IllegalStateException("Engine can only be started once.");
+        if (o != null)
+            throw new IllegalStateException("Engine can only be started once.");
         newEngine(game);
     }
 
@@ -57,6 +58,7 @@ public class Engine {
         newComponents = new ArrayList<>();
         tickListeners = new ArrayList<>();
         game.load();
+        initNewComponents();
     }
 
     private void loop() {
@@ -66,17 +68,6 @@ public class Engine {
     }
 
     public void tick() {
-        if (!newComponents.isEmpty()) {
-            for (Component component : newComponents) {
-                if (component instanceof OnStart)
-                    ((OnStart) component).onStart();
-
-                if (component instanceof OnTick)
-                    tickListeners.add((OnTick) component);
-            }
-            newComponents.clear();
-        }
-
         new ArrayList<>(tickListeners).forEach(OnTick::onTick);
     }
 
@@ -84,9 +75,26 @@ public class Engine {
 
     }
 
+    public static void initNewComponents() {
+        if (o.newComponents.isEmpty()) return;
+
+        List<Component> newComps = new ArrayList<>(o.newComponents);
+        o.newComponents.clear();
+
+        newComps.stream()
+                .filter(comp -> comp instanceof OnAwake)
+                .forEach(comp -> ((OnAwake) comp).onAwake());
+
+        newComps.stream()
+                .filter(comp -> comp instanceof OnStart)
+                .forEach(comp -> ((OnStart) comp).onStart());
+
+        newComps.stream()
+                .filter(comp -> comp instanceof OnTick)
+                .forEach(comp -> o.tickListeners.add((OnTick) comp));
+    }
+
     public static void newComponent(Component component) {
-        if (component instanceof OnAwake)
-            ((OnAwake) component).onAwake();
         o.newComponents.add(component);
     }
 }

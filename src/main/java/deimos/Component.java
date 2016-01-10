@@ -1,19 +1,25 @@
 package deimos;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public abstract class Component {
 
     private Game game;
     private Scene scene;
     private Entity entity;
 
+    @NotNull
     public Game game() {
         return game;
     }
 
+    @Nullable
     public Scene scene() {
         return scene;
     }
 
+    @Nullable
     public Entity entity() {
         return entity;
     }
@@ -23,7 +29,6 @@ public abstract class Component {
         component.game = game;
         component.scene = scene;
         component.entity = entity;
-        Engine.newComponent(component);
         return component;
     }
 
