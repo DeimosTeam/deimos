@@ -1,7 +1,8 @@
 package deimos;
 
-import deimos.listener.OnAwake;
+import deimos.listener.OnInit;
 import deimos.listener.OnStart;
+import deimos.listener.OnStop;
 import deimos.listener.OnTick;
 
 import java.util.ArrayList;
@@ -58,7 +59,6 @@ public class Engine {
         newComponents = new ArrayList<>();
         tickListeners = new ArrayList<>();
         game.load();
-        initNewComponents();
     }
 
     private void loop() {
@@ -67,34 +67,37 @@ public class Engine {
         }
     }
 
-    public void tick() {
-        new ArrayList<>(tickListeners).forEach(OnTick::onTick);
-    }
-
     private void cleanup() {
 
     }
 
-    public static void initNewComponents() {
-        if (o.newComponents.isEmpty()) return;
+    void tick() {
+        if (!newComponents.isEmpty()) {
+            List<Component> temp = new ArrayList<>(newComponents);
+            newComponents.clear();
 
-        List<Component> newComps = new ArrayList<>(o.newComponents);
-        o.newComponents.clear();
+            for (Component component : temp) {
+                if (component instanceof OnStart)
+                    ((OnStart) component).onStart();
 
-        newComps.stream()
-                .filter(comp -> comp instanceof OnAwake)
-                .forEach(comp -> ((OnAwake) comp).onAwake());
+                if (component instanceof OnTick)
+                    tickListeners.add((OnTick) component);
+            }
+        }
 
-        newComps.stream()
-                .filter(comp -> comp instanceof OnStart)
-                .forEach(comp -> ((OnStart) comp).onStart());
-
-        newComps.stream()
-                .filter(comp -> comp instanceof OnTick)
-                .forEach(comp -> o.tickListeners.add((OnTick) comp));
+        new ArrayList<>(tickListeners).forEach(OnTick::onTick);
     }
 
-    public static void newComponent(Component component) {
+    static void initComponent(Component component) {
+        if (component instanceof OnInit)
+            ((OnInit) component).onInit();
         o.newComponents.add(component);
+    }
+
+    static void stopComponent(Component component) {
+        if (component instanceof OnTick)
+            o.tickListeners.remove(component);
+        if (component instanceof OnStop)
+            ((OnStop) component).onStop();
     }
 }

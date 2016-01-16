@@ -9,6 +9,14 @@ public abstract class Component {
     private Scene scene;
     private Entity entity;
 
+    public static Component instantiate(Class<? extends Component> clazz, Game game, Scene scene, Entity entity) throws Exception {
+        Component component = clazz.newInstance();
+        component.game = game;
+        component.scene = scene;
+        component.entity = entity;
+        return component;
+    }
+
     @NotNull
     public Game game() {
         return game;
@@ -23,15 +31,5 @@ public abstract class Component {
     public Entity entity() {
         return entity;
     }
-
-    public static Component instantiate(Class<? extends Component> clazz, Game game, Scene scene, Entity entity) throws Exception {
-        Component component = clazz.newInstance();
-        component.game = game;
-        component.scene = scene;
-        component.entity = entity;
-        return component;
-    }
-
-
 
 }
