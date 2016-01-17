@@ -101,7 +101,7 @@ public class CallOrderTest {
         Scene scene1 = game.addScene("scene1");
         scene1.addComponent(TestComponent.class);
         Scene scene2 = game.addScene("scene2");
-        scene1.addComponent(TestComponent.class);
+        scene2.addComponent(TestComponent.class);
 
         // Entities
         Entity entity1 = scene1.addEntity();
@@ -109,26 +109,67 @@ public class CallOrderTest {
         Entity entity2 = scene2.addEntity();
         entity2.addComponent(TestComponent.class);
 
-        // Start test engine and fetch instantiated components
-        Engine test = Engine.test(game);
+        // Start engine engine and fetch instantiated components
+        Engine engine = Engine.test(game);
         TestComponent gameComp = game.getComponent(TestComponent.class);
-        TestComponent scenComp1 = scene1.getComponent(TestComponent.class);
-        TestComponent scenComp2 = scene2.getComponent(TestComponent.class);
+        TestComponent sceneComp1 = scene1.getComponent(TestComponent.class);
+        TestComponent sceneComp2 = scene2.getComponent(TestComponent.class);
         TestComponent entityComp1 = entity1.getComponent(TestComponent.class);
         TestComponent entityComp2 = entity2.getComponent(TestComponent.class);
 
         // Only some should be initialized
         assertNotNull(gameComp);
-        assertNotNull(scenComp1);
-        assertNull(scenComp2);
+        assertNotNull(sceneComp1);
+        assertNull(sceneComp2);
         assertNotNull(entityComp1);
         assertNull(entityComp2);
 
+        // Assert
         gameComp.assertNumCalls(1,0,0,0);
-        scenComp1.assertNumCalls(1,0,0,0);
+        sceneComp1.assertNumCalls(1,0,0,0);
         entityComp1.assertNumCalls(1,0,0,0);
 
-        //
+        engine.tick();
+        gameComp.assertNumCalls(1,1,1,0);
+        sceneComp1.assertNumCalls(1,1,1,0);
+        entityComp1.assertNumCalls(1,1,1,0);
+
+        engine.tick();
+        gameComp.assertNumCalls(1,1,2,0);
+        sceneComp1.assertNumCalls(1,1,2,0);
+        entityComp1.assertNumCalls(1,1,2,0);
+
+        game.switchScene("scene2");
+        gameComp.assertNumCalls(1,1,2,0);
+        sceneComp1.assertNumCalls(1,1,2,1);
+        entityComp1.assertNumCalls(1,1,2,1);
+
+        gameComp = game.getComponent(TestComponent.class);
+        sceneComp1 = scene1.getComponent(TestComponent.class);
+        sceneComp2 = scene2.getComponent(TestComponent.class);
+        entityComp1 = entity1.getComponent(TestComponent.class);
+        entityComp2 = entity2.getComponent(TestComponent.class);
+
+        // Now others shouldnt be initialized
+        assertNotNull(gameComp);
+        assertNull(sceneComp1);
+        assertNotNull(sceneComp2);
+        assertNull(entityComp1);
+        assertNotNull(entityComp2);
+
+        gameComp.assertNumCalls(1,1,2,0);
+        sceneComp2.assertNumCalls(1,0,0,0);
+        entityComp2.assertNumCalls(1,0,0,0);
+
+        engine.tick();
+        gameComp.assertNumCalls(1,1,3,0);
+        sceneComp2.assertNumCalls(1,1,1,0);
+        entityComp2.assertNumCalls(1,1,1,0);
+
+        engine.tick();
+        gameComp.assertNumCalls(1,1,4,0);
+        sceneComp2.assertNumCalls(1,1,2,0);
+        entityComp2.assertNumCalls(1,1,2,0);
     }
 
 
