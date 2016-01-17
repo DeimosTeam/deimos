@@ -1,7 +1,10 @@
-package deimos;
+package deimos.test;
 
-import deimos.component.TestComponent;
-import org.junit.Ignore;
+import deimos.Engine;
+import deimos.Entity;
+import deimos.Game;
+import deimos.Scene;
+import deimos.test.component.TestComponent;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

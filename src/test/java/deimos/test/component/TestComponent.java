@@ -1,4 +1,4 @@
-package deimos.component;
+package deimos.test.component;
 
 import deimos.Component;
 import deimos.listener.OnInit;

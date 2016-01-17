@@ -1,4 +1,4 @@
-package deimos;
+package deimos.test;
 
 public class Playground {
 

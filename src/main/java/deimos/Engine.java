@@ -71,7 +71,7 @@ public class Engine {
 
     }
 
-    void tick() {
+    public void tick() {
         if (!newComponents.isEmpty()) {
             List<Component> temp = new ArrayList<>(newComponents);
             newComponents.clear();
