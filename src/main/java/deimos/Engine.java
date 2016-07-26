@@ -27,10 +27,9 @@ public class Engine {
         newEngine(game);
     }
 
-    public static Engine test(Game game) {
+    public static void test(Game game) {
         testMode = true;
         newEngine(game);
-        return o;
     }
 
     private static void newEngine(Game game) {
@@ -71,21 +70,21 @@ public class Engine {
 
     }
 
-    void tick() {
-        if (!newComponents.isEmpty()) {
-            List<Component> temp = new ArrayList<>(newComponents);
-            newComponents.clear();
+    static void tick() {
+        if (!o.newComponents.isEmpty()) {
+            List<Component> temp = new ArrayList<>(o.newComponents);
+            o.newComponents.clear();
 
             for (Component component : temp) {
                 if (component instanceof OnStart)
                     ((OnStart) component).onStart();
 
                 if (component instanceof OnTick)
-                    tickListeners.add((OnTick) component);
+                    o.tickListeners.add((OnTick) component);
             }
         }
 
-        new ArrayList<>(tickListeners).forEach(OnTick::onTick);
+        new ArrayList<>(o.tickListeners).forEach(OnTick::onTick);
     }
 
     static void initComponent(Component component) {

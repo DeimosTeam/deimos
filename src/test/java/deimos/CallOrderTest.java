@@ -14,19 +14,19 @@ public class CallOrderTest {
         // Arrange
         Game game = new Game();
         game.addComponent(TestComponent.class);
-        Engine test = Engine.test(game);
+        Engine.test(game);
         TestComponent comp = game.getComponent(TestComponent.class);
 
         // Assert
         comp.assertNumCalls(1,0,0,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,1,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,2,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,3,0);
     }
 
@@ -38,19 +38,19 @@ public class CallOrderTest {
         Scene scene = game.addScene("scene");
         scene.addComponent(TestComponent.class);
 
-        Engine test = Engine.test(game);
+        Engine.test(game);
         TestComponent comp = scene.getComponent(TestComponent.class);
 
         // Assert
         comp.assertNumCalls(1,0,0,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,1,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,2,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,3,0);
 
         game.switchScene("scene");
@@ -66,19 +66,19 @@ public class CallOrderTest {
         Entity entity = scene.addEntity();
         entity.addComponent(TestComponent.class);
 
-        Engine test = Engine.test(game);
+        Engine.test(game);
         TestComponent comp = entity.getComponent(TestComponent.class);
 
         // Assert
         comp.assertNumCalls(1,0,0,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,1,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,2,0);
 
-        test.tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,3,0);
 
         game.switchScene("scene");
@@ -107,7 +107,7 @@ public class CallOrderTest {
         entity2.addComponent(TestComponent.class);
 
         // Start test engine and fetch instantiated components
-        Engine test = Engine.test(game);
+        Engine.test(game);
         TestComponent gameComp = game.getComponent(TestComponent.class);
         TestComponent scenComp1 = scene1.getComponent(TestComponent.class);
         TestComponent scenComp2 = scene2.getComponent(TestComponent.class);
