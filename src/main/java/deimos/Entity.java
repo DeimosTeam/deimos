@@ -38,7 +38,7 @@ public class Entity extends ComponentHolder implements Iterable<Entity> {
         JsonElement children = initialConfig.get("children");
         if (children != null) {
             for (JsonElement elm : children.getAsJsonArray()) {
-                String childId = elm.getAsJsonPrimitive().getAsString();
+                String childId = elm.getAsString();
 
                 this.children.add(batch.get(childId));
             }
@@ -47,7 +47,7 @@ public class Entity extends ComponentHolder implements Iterable<Entity> {
         // Add components.
         for (Map.Entry<String, JsonElement> entry : initialConfig.entrySet()) {
             String componentId = entry.getKey();
-            if (componentId.equals("children"))
+            if (componentId.equals("children") || componentId.equals("root")) // TODO Maybe separate component array?
                 continue;
 
             try {
@@ -63,6 +63,14 @@ public class Entity extends ComponentHolder implements Iterable<Entity> {
         }
     }
 
+    public boolean isRootNode() {
+        if (initialConfig == null)
+            return true; // TODO Handle when addChild is supported.
+
+        JsonElement root = initialConfig.get("root");
+        return root != null && root.getAsBoolean();
+    }
+
     // Constructor for cloning
     public Entity(Entity source) {
         components = new HashMap<>(source.components);
@@ -74,13 +82,14 @@ public class Entity extends ComponentHolder implements Iterable<Entity> {
         return id;
     }
 
-    public <T extends Component> JsonObject getInitialConfigFor(Class<T> component) {
+    public JsonObject getInitialConfigFor(Class<? extends Component> component) {
         if (initialConfig == null)
             return null;
-        return (JsonObject)initialConfig.get(component.getName());
+        return initialConfig.get(component.getName()).getAsJsonObject();
     }
 
     public void addChild(Entity entity) {
+        // TODO needs to be added to the list of scene entities.
         children.add(entity);
     }
 

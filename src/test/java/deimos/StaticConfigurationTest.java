@@ -44,6 +44,9 @@ public class StaticConfigurationTest {
         Assert.assertEquals(1, bigChildren.size());
         Assert.assertTrue(bigChildren.contains(small));
 
+        Assert.assertTrue(big.isRootNode());
+        Assert.assertFalse(small.isRootNode());
+
         // Check values
         TestPositionComponent bigPos = big.getComponent(TestPositionComponent.class);
         bigPos.assertPosition(999, 1000);

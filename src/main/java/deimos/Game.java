@@ -1,5 +1,6 @@
 package deimos;
 
+import deimos.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,7 @@ public class Game extends ComponentHolder {
     private Scene startScene;
     private Scene currentScene;
     private Map<String, Scene> scenes = new HashMap<>();
+    private Renderer renderer;
 
     public Scene addScene(String id, Reader entityConfig) {
         if (scenes.containsKey(id))
@@ -38,6 +40,15 @@ public class Game extends ComponentHolder {
         }
     }
 
+    public Game setRenderer(Renderer renderer) {
+        this.renderer = renderer;
+        return this;
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
     public void switchScene(String id) {
         if (!scenes.containsKey(id)) {
             log.warn("No such scene ID: {}", id, new NullPointerException());
@@ -47,5 +58,9 @@ public class Game extends ComponentHolder {
         currentScene.unload();
         currentScene = scenes.get(id);
         currentScene.load(this);
+    }
+
+    public Scene getCurrentScene() {
+        return currentScene;
     }
 }

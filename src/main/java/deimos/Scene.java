@@ -14,14 +14,12 @@ import java.util.stream.Collectors;
 public class Scene extends ComponentHolder {
 
     private final String id;
-    private List<Entity> initialEntities;
-    private List<Entity> liveEntities;
+    private List<Entity> initialEntities = new ArrayList<>();
+    private List<Entity> rootEntities = new ArrayList<>();
+    private List<Entity> liveEntities = new ArrayList<>();
 
     public Scene(String id, Reader entityConfig) {
         this.id = id;
-        initialEntities = new ArrayList<>();
-        liveEntities = new ArrayList<>();
-
         if (entityConfig == null) // Empty scene with no configuration.
             return;
 
@@ -41,8 +39,12 @@ public class Scene extends ComponentHolder {
 
         // Add children and initial components. Defer to here such that all IDs
         // referenced in children are present in the staticEntites map.
-        initialEntities.stream()
-                .forEach(e -> e.prepareConfig(staticEntities));
+        for (Entity entity : initialEntities) {
+            entity.prepareConfig(staticEntities);
+
+            if (entity.isRootNode())
+                rootEntities.add(entity);
+        }
     }
 
     public String getId() {
@@ -69,7 +71,12 @@ public class Scene extends ComponentHolder {
     public Entity addEntity(String id) {
         Entity entity = new Entity(id);
         initialEntities.add(entity);
+        rootEntities.add(entity);
         return entity;
+    }
+
+    public List<Entity> getRootEntities() {
+        return rootEntities;
     }
 
     public List<Entity> getEntitiesWith(Class<? extends Component> component) {
