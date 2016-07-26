@@ -70,7 +70,16 @@ public class Engine {
 
     }
 
-    static void tick() {
+    /**
+     * Get a handle to the current engine.
+     *
+     * @return instance.
+     */
+    public static Engine get() {
+        return o;
+    }
+
+    void tick() {
         if (!o.newComponents.isEmpty()) {
             List<Component> temp = new ArrayList<>(o.newComponents);
             o.newComponents.clear();
