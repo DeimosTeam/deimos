@@ -63,7 +63,7 @@ public class CallOrderTest {
         // Arrange
         Game game = new Game();
         Scene scene = game.addScene("scene");
-        Entity entity = scene.addEntity();
+        Entity entity = scene.addEntity("test");
         entity.addComponent(TestComponent.class);
 
         Engine.test(game);
@@ -101,9 +101,9 @@ public class CallOrderTest {
         scene1.addComponent(TestComponent.class);
 
         // Entities
-        Entity entity1 = scene1.addEntity();
+        Entity entity1 = scene1.addEntity("test1");
         entity1.addComponent(TestComponent.class);
-        Entity entity2 = scene2.addEntity();
+        Entity entity2 = scene2.addEntity("test2");
         entity2.addComponent(TestComponent.class);
 
         // Start test engine and fetch instantiated components

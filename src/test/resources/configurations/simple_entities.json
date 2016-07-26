@@ -1,0 +1,16 @@
+{
+  "small_entity": {
+    "deimos.component.TestPositionComponent": {
+      "x": 11,
+      "y": 22
+    }
+
+  },
+  "big_entity": {
+    "deimos.component.TestPositionComponent": {
+      "x": 999,
+      "y": 1000
+    },
+    "children": [ "small_entity" ]
+  }
+}

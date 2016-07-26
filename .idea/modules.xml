@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/deimos.iml" filepath="$PROJECT_DIR$/.idea/modules/deimos.iml" />
       <module fileurl="file://$PROJECT_DIR$/deimos.iml" filepath="$PROJECT_DIR$/deimos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/deimos_main.iml" filepath="$PROJECT_DIR$/.idea/modules/deimos_main.iml" group="deimos" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/deimos_test.iml" filepath="$PROJECT_DIR$/.idea/modules/deimos_test.iml" group="deimos" />
     </modules>
   </component>
 </project>

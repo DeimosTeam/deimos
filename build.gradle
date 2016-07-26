@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    compile "com.google.code.gson:gson:2.7+"
     compile "org.lwjgl:lwjgl:+"
     compile "org.lwjgl:lwjgl-platform:+:natives-windows"
     compile "org.joml:joml:+"

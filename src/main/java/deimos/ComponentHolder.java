@@ -10,7 +10,7 @@ public abstract class ComponentHolder {
     protected void initComponents(Game game, Scene scene, Entity entity) {
         for (Class<? extends Component> clazz : components.keySet()) {
             try {
-                Component comp = Component.instantiate(clazz, game, scene ,entity);
+                Component comp = Component.instantiate(clazz, game, scene, entity);
                 components.put(clazz, comp);
                 Engine.initComponent(comp);
             } catch (Exception e) {

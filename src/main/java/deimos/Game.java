@@ -1,5 +1,6 @@
 package deimos;
 
+import java.io.Reader;
 import java.util.*;
 
 public class Game extends ComponentHolder {
@@ -8,16 +9,20 @@ public class Game extends ComponentHolder {
     private Scene currentScene;
     private Map<String, Scene> scenes = new HashMap<>();
 
-    public Scene addScene(String id) {
+    public Scene addScene(String id, Reader entityConfig) {
         if (scenes.containsKey(id))
             throw new IllegalStateException("Duplicate Scene ID: " + id);
 
-        Scene scene = new Scene(id);
+        Scene scene = new Scene(id, entityConfig);
         scenes.put(id, scene);
         if (startScene == null)
             startScene = scene;
 
         return scene;
+    }
+
+    public Scene addScene(String id) {
+        return addScene(id, null);
     }
 
     void load() throws Exception {

@@ -1,14 +1,87 @@
 package deimos;
 
-import java.util.HashMap;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-public class Entity extends ComponentHolder {
+import java.util.*;
 
-    public Entity() {}
+public class Entity extends ComponentHolder implements Iterable<Entity> {
+    private final Set<Entity> children = new LinkedHashSet<>();
+    private String id;
+    private JsonObject initialConfig;
+
+    public Entity(String id) {
+        this.id = id;
+    }
+
+    public Entity(String id, JsonObject initialConfig) {
+        this(id);
+        this.initialConfig = initialConfig;
+    }
+
+    /**
+     * Adds the entities referenced by ID in the configuration to the list of children.
+     * Adds components from the configuration.
+     *
+     * @param batch Map storing the entity instances loaded from the configuration.
+     */
+    @SuppressWarnings("unchecked")
+    void prepareConfig(Map<String, Entity> batch) {
+        if (initialConfig == null)
+            return;
+
+        // Add children.
+        JsonElement children = initialConfig.get("children");
+        if (children != null) {
+            for (JsonElement elm : children.getAsJsonArray()) {
+                String childId = elm.getAsJsonPrimitive().getAsString();
+
+                this.children.add(batch.get(childId));
+            }
+        }
+
+        // Add components.
+        for (Map.Entry<String, JsonElement> entry : initialConfig.entrySet()) {
+            String componentId = entry.getKey();
+            if (componentId.equals("children"))
+                continue;
+
+            try {
+                Class<?> clazz = getClass().getClassLoader().loadClass(componentId);
+
+                if (Component.class.isAssignableFrom(clazz))
+                    addComponent((Class<? extends Component>)clazz);
+                else
+                    System.out.println("Not assign blablal"); // TODO Log.
+            } catch (ClassNotFoundException e) {
+                System.out.println("Not a component blalbal");
+            }
+        }
+    }
 
     // Constructor for cloning
     public Entity(Entity source) {
         components = new HashMap<>(source.components);
+        id = source.id + "_copy"; // TODO What to do when the other ID already exists?
+        initialConfig = source.initialConfig;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public <T extends Component> JsonObject getInitialConfigFor(Class<T> component) {
+        if (initialConfig == null)
+            return null;
+        return (JsonObject)initialConfig.get(component.getName());
+    }
+
+    public void addChild(Entity entity) {
+        children.add(entity);
+    }
+
+    @Override
+    public Iterator<Entity> iterator() {
+        return children.iterator();
+    }
 }
