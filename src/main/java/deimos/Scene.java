@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.*;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +23,10 @@ public class Scene extends ComponentHolder {
         if (entityConfig == null) // Empty scene with no configuration.
             return;
 
-        JsonElement root = new JsonParser().parse(entityConfig);
+        JsonObject root = new JsonParser().parse(entityConfig).getAsJsonObject();
         Map<String, Entity> staticEntities = new HashMap<>();
 
-        for (Map.Entry<String, JsonElement> entry : ((JsonObject)root).entrySet()) {
+        for (Map.Entry<String, JsonElement> entry : root.entrySet()) {
             String eid = entry.getKey();
             Entity entity = new Entity(eid, (JsonObject)entry.getValue());
 
@@ -37,10 +37,10 @@ public class Scene extends ComponentHolder {
             initialEntities.add(entity);
         }
 
-        // Add children and initial components. Defer to here such that all IDs
+        // Add children. Defer to here such that all IDs
         // referenced in children are present in the staticEntites map.
         for (Entity entity : initialEntities) {
-            entity.prepareConfig(staticEntities);
+            entity.addChildrenFromConfig(root.get(entity.getId()).getAsJsonObject(), staticEntities);
 
             if (entity.isRootNode())
                 rootEntities.add(entity);

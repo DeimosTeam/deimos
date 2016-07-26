@@ -17,7 +17,7 @@ public abstract class ComponentHolder {
                 Engine.initComponent(comp, initializers.get(clazz));
             } catch (Exception e) {
                 String msg = String.format("Failed to instantiate %s: No nullary constructor was found.", clazz.getSimpleName());
-                throw new IllegalStateException(msg);
+                throw new IllegalStateException(msg, e);
             }
         }
     }
