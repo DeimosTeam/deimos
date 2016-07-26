@@ -4,24 +4,23 @@ import deimos.Component;
 import deimos.listener.OnInit;
 
 public class TestInitComponent extends Component implements OnInit {
-    private String text = "Nothing";
-    private boolean onInitCalled = false;
+    private String onInitText = "Nothing";
+    private String customText = "Nothing";
 
     @Override
     public void onInit() {
-        text = "onInit";
-        onInitCalled = true;
+        onInitText = "onInit";
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setText(String customText) {
+        this.customText = customText;
     }
 
-    public String getText() {
-        return text;
+    public String getCustomText() {
+        return customText;
     }
 
-    public boolean onInitWasCalled() {
-        return onInitCalled;
+    public String getOnInitText() {
+        return onInitText;
     }
 }

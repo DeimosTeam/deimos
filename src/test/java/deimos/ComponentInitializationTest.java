@@ -14,8 +14,8 @@ public class ComponentInitializationTest {
         Engine.test(game);
 
         TestInitComponent comp = game.getComponent(TestInitComponent.class);
-        Assert.assertEquals("onInit", comp.getText());
-        Assert.assertTrue(comp.onInitWasCalled());
+        Assert.assertEquals("Nothing", comp.getCustomText());
+        Assert.assertEquals("onInit", comp.getOnInitText());
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ComponentInitializationTest {
         Engine.test(game);
 
         TestInitComponent comp = game.getComponent(TestInitComponent.class);
-        Assert.assertEquals(text, comp.getText());
-        Assert.assertFalse(comp.onInitWasCalled());
+        Assert.assertEquals(text, comp.getCustomText());
+        Assert.assertEquals("onInit", comp.getOnInitText());
     }
 }
