@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Engine {
     private static final Logger log = LoggerFactory.getLogger(Entity.class);
@@ -99,9 +100,13 @@ public class Engine {
         new ArrayList<>(o.tickListeners).forEach(OnTick::onTick);
     }
 
-    static void initComponent(Component component) {
-        if (component instanceof OnInit)
-            ((OnInit) component).onInit();
+    static void initComponent(Component component, Consumer<Component> init) {
+        if (init != null) {
+            init.accept(component);
+        } else {
+            if (component instanceof OnInit)
+                ((OnInit)component).onInit();
+        }
         o.newComponents.add(component);
     }
 
