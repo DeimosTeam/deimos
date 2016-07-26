@@ -4,11 +4,13 @@ import deimos.listener.OnInit;
 import deimos.listener.OnStart;
 import deimos.listener.OnStop;
 import deimos.listener.OnTick;
+import deimos.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Engine {
     private static final Logger log = LoggerFactory.getLogger(Entity.class);
@@ -66,11 +68,34 @@ public class Engine {
     private void loop() {
         while (running) {
             tick();
+            render();
+        }
+    }
+
+    private void render() {
+        Renderer renderer = Objects.requireNonNull(game.getRenderer(), "No renderer attached.");
+
+        for (Entity root : game.getCurrentScene().getRootEntities()) {
+            renderer.startRendering();
+            renderVisit(renderer, root);
+            renderer.endRendering();
+        }
+    }
+
+    private void renderVisit(Renderer renderer, Entity node) {
+        boolean advance = true;
+
+        if (renderer.preRenderFilter(node))
+            advance = renderer.renderVisitNode(node);
+
+        if (advance) {
+            for (Entity child : node)
+                renderVisit(renderer, child);
         }
     }
 
     private void cleanup() {
-
+        // Haha, no.
     }
 
     /**
