@@ -4,11 +4,14 @@ import deimos.listener.OnInit;
 import deimos.listener.OnStart;
 import deimos.listener.OnStop;
 import deimos.listener.OnTick;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Engine {
+    private static final Logger log = LoggerFactory.getLogger(Entity.class);
 
     // Singleton
     static Engine o;
@@ -48,7 +51,7 @@ public class Engine {
             if (testMode) return;
             loop();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Uncaught exception in main loop", e);
         } finally {
             cleanup();
         }

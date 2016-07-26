@@ -1,9 +1,13 @@
 package deimos;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Reader;
 import java.util.*;
 
 public class Game extends ComponentHolder {
+    private static final Logger log = LoggerFactory.getLogger(Game.class);
 
     private Scene startScene;
     private Scene currentScene;
@@ -36,7 +40,7 @@ public class Game extends ComponentHolder {
 
     public void switchScene(String id) {
         if (!scenes.containsKey(id)) {
-            new NullPointerException("No such Scene ID: " + id).printStackTrace();
+            log.warn("No such scene ID: {}", id, new NullPointerException());
             return;
         }
 

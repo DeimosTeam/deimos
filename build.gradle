@@ -10,6 +10,8 @@ repositories {
 
 dependencies {
     compile "com.google.code.gson:gson:2.7+"
+    compile "org.slf4j:slf4j-api:1.7+"
+    compile "org.slf4j:slf4j-simple:1.7+"
     compile "org.lwjgl:lwjgl:+"
     compile "org.lwjgl:lwjgl-platform:+:natives-windows"
     compile "org.joml:joml:+"

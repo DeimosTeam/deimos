@@ -2,10 +2,14 @@ package deimos;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class Entity extends ComponentHolder implements Iterable<Entity> {
+    private static final Logger log = LoggerFactory.getLogger(Entity.class);
+
     private final Set<Entity> children = new LinkedHashSet<>();
     private String id;
     private JsonObject initialConfig;
@@ -52,9 +56,9 @@ public class Entity extends ComponentHolder implements Iterable<Entity> {
                 if (Component.class.isAssignableFrom(clazz))
                     addComponent((Class<? extends Component>)clazz);
                 else
-                    System.out.println("Not assign blablal"); // TODO Log.
+                    log.warn("Not a component class in config");
             } catch (ClassNotFoundException e) {
-                System.out.println("Not a component blalbal");
+                log.warn("Component '{}' not found", componentId, e);
             }
         }
     }
