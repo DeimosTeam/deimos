@@ -1,13 +1,18 @@
 package deimos;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.joml.Vector2i;
+import org.joml.Vector3i;
+import org.joml.Vector4i;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +28,14 @@ public class ConfigLoader {
     private static final Map<Class<?>, Function<JsonElement, Object>> types = new HashMap<>();
 
     static {
-        types.put(     int.class, JsonElement::getAsInt);
-        types.put( Integer.class, JsonElement::getAsInt);
+        // Number types
+        types.put(      int.class, JsonElement::getAsInt);
+        types.put(  Integer.class, JsonElement::getAsInt);
+
+        // Vector types
+        types.put( Vector2i.class, j -> new Vector2i(toIntBuffer(j.getAsJsonArray())));
+        types.put( Vector3i.class, j -> new Vector3i(toIntBuffer(j.getAsJsonArray())));
+        types.put( Vector4i.class, j -> new Vector4i(toIntBuffer(j.getAsJsonArray())));
     }
 
     private final List<Field> fields = new ArrayList<>();
@@ -39,6 +50,13 @@ public class ConfigLoader {
                 fields.add(field);
             }
         }
+    }
+
+    private static IntBuffer toIntBuffer(JsonArray array) {
+        IntBuffer buffer = IntBuffer.allocate(array.size());
+        array.forEach(elm -> buffer.put(elm.getAsInt()));
+        buffer.rewind();
+        return buffer;
     }
 
     /**

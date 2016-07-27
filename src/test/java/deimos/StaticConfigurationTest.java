@@ -1,6 +1,10 @@
 package deimos;
 
+import deimos.component.TestComponentWithVectors;
 import deimos.component.TestPositionComponent;
+import org.joml.Vector2i;
+import org.joml.Vector3i;
+import org.joml.Vector4i;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,14 +24,19 @@ public class StaticConfigurationTest {
         return null;
     }
 
-    @Test
-    public void testSimpleEntities() throws FileNotFoundException {
+    public static Scene initGameAndConfiguredScene(String path) {
         Game game = new Game();
 
-        InputStream is = ClassLoader.getSystemResourceAsStream("configurations/simple_entities.json");
+        InputStream is = ClassLoader.getSystemResourceAsStream(path);
         Scene scene = game.addScene("scene", new InputStreamReader(is));
 
         Engine.test(game);
+        return scene;
+    }
+
+    @Test
+    public void testSimpleEntities() {
+        Scene scene = initGameAndConfiguredScene("configurations/simple_entities.json");
 
         List<Entity> entities = scene.getEntitiesWith(TestPositionComponent.class);
 
@@ -53,5 +62,18 @@ public class StaticConfigurationTest {
 
         TestPositionComponent smallPos = small.getComponent(TestPositionComponent.class);
         smallPos.assertPosition(11, 22);
+    }
+
+    @Test
+    public void testVectorTypes() {
+        Scene scene = initGameAndConfiguredScene("configurations/entity_with_vectors.json");
+        List<Entity> entities = scene.getEntitiesWith(TestComponentWithVectors.class);
+        Assert.assertEquals(1, entities.size());
+
+        TestComponentWithVectors component = entities.get(0).getComponent(TestComponentWithVectors.class);
+
+        Assert.assertEquals(new Vector2i(1, 2), component.vec2i);
+        Assert.assertEquals(new Vector3i(1, 2, 3), component.vec3i);
+        Assert.assertEquals(new Vector4i(1, 2, 3, 4), component.vec4i);
     }
 }
