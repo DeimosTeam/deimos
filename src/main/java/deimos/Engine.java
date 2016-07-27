@@ -5,16 +5,14 @@ import deimos.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
-import java.util.Objects;
 
 public class Engine {
     private static final Logger log = LoggerFactory.getLogger(Entity.class);
 
     // Singleton
-    static Engine o;
+    private static Engine o;
 
     // Testing Mode
     private static boolean testMode;
@@ -96,16 +94,9 @@ public class Engine {
         // Haha, no.
     }
 
-    /**
-     * Get a handle to the current engine.
-     *
-     * @return instance.
-     */
-    public static Engine get() {
-        return o;
-    }
+    static void tick() {
+        Set<Class<? extends OnTick>> discoveredMainInstances = new HashSet<>();
 
-    void tick() {
         if (!o.newComponents.isEmpty()) {
             List<Component> temp = new ArrayList<>(o.newComponents);
             o.newComponents.clear();
@@ -117,8 +108,21 @@ public class Engine {
                     o.tickListeners.add((OnTick) component);
             }
         }
+        new ArrayList<>(o.tickListeners).stream()
+                .filter(c -> {
+                    if (!(c instanceof MainInstance))
+                        return true;
 
-        new ArrayList<>(o.tickListeners).forEach(OnTick::onTick);
+                    if (!((MainInstance)c).isMainInstance())
+                        return false;
+
+                    if (!discoveredMainInstances.add(c.getClass())) {
+                        log.warn("Multiple main instances for {} were found", c.getClass());
+                        return false;
+                    }
+                    return true;
+                })
+                .forEach(OnTick::onTick);
     }
 
     static void initComponent(Component component, Consumer<Component> init) {

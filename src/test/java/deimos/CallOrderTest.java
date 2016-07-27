@@ -20,13 +20,13 @@ public class CallOrderTest {
         // Assert
         comp.assertNumCalls(1,0,0,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,1,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,2,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,3,0);
     }
 
@@ -44,13 +44,13 @@ public class CallOrderTest {
         // Assert
         comp.assertNumCalls(1,0,0,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,1,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,2,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,3,0);
 
         game.switchScene("scene");
@@ -72,13 +72,13 @@ public class CallOrderTest {
         // Assert
         comp.assertNumCalls(1,0,0,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,1,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,2,0);
 
-        Engine.get().tick();
+        Engine.tick();
         comp.assertNumCalls(1,1,3,0);
 
         game.switchScene("scene");
