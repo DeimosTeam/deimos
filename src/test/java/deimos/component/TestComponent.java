@@ -1,9 +1,6 @@
 package deimos.component;
 
 import deimos.Component;
-import deimos.listener.OnInit;
-import deimos.listener.OnStart;
-import deimos.listener.OnStop;
 import deimos.listener.OnTick;
 
 import java.util.HashMap;
@@ -11,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestComponent extends Component implements OnInit, OnStart, OnTick, OnStop {
+public class TestComponent extends Component implements OnTick {
 
     private Map<String, Integer> map = new HashMap<>();
 

@@ -31,4 +31,9 @@ public abstract class Component {
         return entity;
     }
 
+    public void onInit() { }
+
+    public void onStart() { }
+
+    public void onStop() { }
 }

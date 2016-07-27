@@ -1,8 +1,5 @@
 package deimos;
 
-import deimos.listener.OnInit;
-import deimos.listener.OnStart;
-import deimos.listener.OnStop;
 import deimos.listener.OnTick;
 import deimos.renderer.Renderer;
 import org.slf4j.Logger;
@@ -114,8 +111,7 @@ public class Engine {
             o.newComponents.clear();
 
             for (Component component : temp) {
-                if (component instanceof OnStart)
-                    ((OnStart) component).onStart();
+                component.onStart();
 
                 if (component instanceof OnTick)
                     o.tickListeners.add((OnTick) component);
@@ -128,15 +124,15 @@ public class Engine {
     static void initComponent(Component component, Consumer<Component> init) {
         if (init != null)
             init.accept(component);
-        if (component instanceof OnInit)
-            ((OnInit)component).onInit();
+
+        component.onInit();
         o.newComponents.add(component);
     }
 
     static void stopComponent(Component component) {
         if (component instanceof OnTick)
             o.tickListeners.remove(component);
-        if (component instanceof OnStop)
-            ((OnStop) component).onStop();
+
+        component.onStop();
     }
 }

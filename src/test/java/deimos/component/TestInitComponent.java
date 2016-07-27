@@ -1,9 +1,8 @@
 package deimos.component;
 
 import deimos.Component;
-import deimos.listener.OnInit;
 
-public class TestInitComponent extends Component implements OnInit {
+public class TestInitComponent extends Component {
     private String onInitText = "Nothing";
     private String customText = "Nothing";
 

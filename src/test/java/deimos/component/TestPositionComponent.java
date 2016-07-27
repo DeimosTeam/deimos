@@ -2,10 +2,9 @@ package deimos.component;
 
 import deimos.Component;
 import deimos.ConfigLoader;
-import deimos.listener.OnInit;
 import org.junit.Assert;
 
-public class TestPositionComponent extends Component implements OnInit {
+public class TestPositionComponent extends Component {
     private boolean initialized;
 
     @ConfigLoader.Property
