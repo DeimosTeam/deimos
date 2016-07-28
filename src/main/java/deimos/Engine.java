@@ -95,8 +95,6 @@ public class Engine {
     }
 
     static void tick() {
-        Set<Class<? extends OnTick>> discoveredMainInstances = new HashSet<>();
-
         if (!o.newComponents.isEmpty()) {
             List<Component> temp = new ArrayList<>(o.newComponents);
             o.newComponents.clear();
@@ -108,21 +106,7 @@ public class Engine {
                     o.tickListeners.add((OnTick) component);
             }
         }
-        new ArrayList<>(o.tickListeners).stream()
-                .filter(c -> {
-                    if (!(c instanceof MainInstance))
-                        return true;
-
-                    if (!((MainInstance)c).isMainInstance())
-                        return false;
-
-                    if (!discoveredMainInstances.add(c.getClass())) {
-                        log.warn("Multiple main instances for {} were found", c.getClass());
-                        return false;
-                    }
-                    return true;
-                })
-                .forEach(OnTick::onTick);
+        new ArrayList<>(o.tickListeners).forEach(OnTick::onTick);
     }
 
     static void initComponent(Component component, Consumer<Component> init) {
