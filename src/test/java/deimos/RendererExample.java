@@ -9,8 +9,7 @@ import java.io.InputStreamReader;
 public class RendererExample {
 
     public static void main(String[] args) {
-        Game game = new Game()
-                .setRenderer(new SimpleForwardRenderer());
+        Game game = new Game();
 
         Scene scene = game.addScene("main_scene");
         Entity root = scene.addEntity("root_entity");

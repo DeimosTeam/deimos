@@ -53,7 +53,7 @@ public class ConfigLoader {
     }
 
     private static IntBuffer toIntBuffer(JsonArray array) {
-        IntBuffer buffer = IntBuffer.allocate(array.size());
+        IntBuffer buffer = IntBuffer.allocate(array.size()); // TODO kan optimize ved at holde static buffer.
         array.forEach(elm -> buffer.put(elm.getAsInt()));
         buffer.rewind();
         return buffer;

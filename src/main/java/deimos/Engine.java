@@ -1,7 +1,7 @@
 package deimos;
 
+import deimos.basecomponents.Camera;
 import deimos.listener.OnTick;
-import deimos.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,29 +64,11 @@ public class Engine {
     private void loop() {
         while (running) {
             tick();
-            render();
-        }
-    }
 
-    private void render() {
-        Renderer renderer = Objects.requireNonNull(game.getRenderer(), "No renderer attached.");
-
-        for (Entity root : game.getCurrentScene().getRootEntities()) {
-            renderer.startRendering();
-            renderVisit(renderer, root);
-            renderer.endRendering();
-        }
-    }
-
-    private void renderVisit(Renderer renderer, Entity node) {
-        boolean advance = true;
-
-        if (renderer.preRenderFilter(node))
-            advance = renderer.renderVisitNode(node);
-
-        if (advance) {
-            for (Entity child : node)
-                renderVisit(renderer, child);
+            if (Camera.getPrimaryCamera() != null)
+                Camera.getPrimaryCamera().renderFrame();
+            // TODO Some queue system? What happens when (if) we add physics, networking,
+            // AI, multiple passes of same type, etc...?
         }
     }
 
