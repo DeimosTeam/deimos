@@ -1,5 +1,7 @@
 package deimos;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import deimos.component.TestComponentWithVectors;
 import deimos.component.TestPositionComponent;
 import org.joml.Vector2i;
@@ -9,9 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class StaticConfigurationTest {
 
@@ -32,6 +32,10 @@ public class StaticConfigurationTest {
 
         Engine.test(game);
         return scene;
+    }
+
+    public static JsonObject createJsonObject(String json) {
+        return new JsonParser().parse(json).getAsJsonObject();
     }
 
     @Test
@@ -76,4 +80,41 @@ public class StaticConfigurationTest {
         Assert.assertEquals(new Vector3i(1, 2, 3), component.vec3i);
         Assert.assertEquals(new Vector4i(1, 2, 3, 4), component.vec4i);
     }
+
+    @Test
+    public void testBooleanGetterEmpty() {
+        JsonObject o = createJsonObject("{ }");
+        Assert.assertFalse(ConfigLoader.getBoolean(o, "bool", false));
+        Assert.assertTrue(ConfigLoader.getBoolean(o, "bool", true));
+    }
+
+    @Test
+    public void testBooleanGetter() {
+        JsonObject o = createJsonObject("{ \"bool\": true }");
+        Assert.assertTrue(ConfigLoader.getBoolean(o, "bool", false));
+    }
+
+    @Test
+    public void testListGetterEmpty() {
+        JsonObject o = createJsonObject("{ }");
+        Assert.assertEquals(Collections.emptyList(), ConfigLoader.getList(o, "list", String.class));
+    }
+
+    @Test
+    public void testListGetterStrings() {
+        JsonObject o = createJsonObject("{ \"list\": [ \"yo\", \"hello\" ] }");
+        Assert.assertEquals(
+                Arrays.asList("yo", "hello"),
+                ConfigLoader.getList(o, "list", String.class));
+    }
+
+    @Test
+    public void testListGetterInts() {
+        JsonObject o = createJsonObject("{ \"list\": [ -1, 0, 123 ] }");
+        Assert.assertEquals(
+                Arrays.asList(-1, 0, 123),
+                ConfigLoader.getList(o, "list", int.class));
+    }
+
+
 }

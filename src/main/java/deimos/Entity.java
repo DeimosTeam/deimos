@@ -22,13 +22,17 @@ public class Entity extends ComponentHolder implements Iterable<Entity> {
     public Entity(String id, JsonObject initialConfig) {
         this(id);
 
+        // Set root node flag.
+        rootNode = ConfigLoader.getBoolean(initialConfig, "root", false);
+
         // Add components.
-        for (Map.Entry<String, JsonElement> entry : initialConfig.entrySet()) {
+        JsonElement componentsElement = initialConfig.get("components");
+        if (componentsElement == null)
+            return;
+        JsonObject componentsObject = componentsElement.getAsJsonObject();
+
+        for (Map.Entry<String, JsonElement> entry : componentsObject.entrySet()) {
             String componentId = entry.getKey();
-
-            if (componentId.equals("children") || componentId.equals("root")) // TODO Maybe separate component array in JSON?
-                continue;
-
             try {
                 Class<?> clazz = getClass().getClassLoader().loadClass(componentId);
 
@@ -37,16 +41,13 @@ public class Entity extends ComponentHolder implements Iterable<Entity> {
                     continue;
                 }
                 Class<Component> cclazz = (Class<Component>)clazz;
-                addComponent(cclazz, ConfigLoader.createConfigLoader(cclazz, initialConfig));
+                addComponent(cclazz, ConfigLoader.createConfigLoader(cclazz, componentsObject));
 
             } catch (ClassNotFoundException e) {
                 log.warn("Component '{}' not found", componentId, e);
             }
         }
 
-        // Set root node flag.
-        JsonElement root = initialConfig.get("root");
-        rootNode = root != null && root.getAsBoolean();
     }
 
     /**

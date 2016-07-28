@@ -1,9 +1,11 @@
 {
   "vector_entity": {
-    "deimos.component.TestComponentWithVectors": {
-      "vec2i": [1, 2],
-      "vec3i": [1, 2, 3],
-      "vec4i": [1, 2, 3, 4]
+    "components": {
+      "deimos.component.TestComponentWithVectors": {
+        "vec2i": [1, 2],
+        "vec3i": [1, 2, 3],
+        "vec4i": [1, 2, 3, 4]
+      }
     },
     "root": true
   }

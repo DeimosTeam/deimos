@@ -28,11 +28,9 @@ public class Camera extends Component {
     public void renderFrame() {
         Objects.requireNonNull(renderer, "No renderer attached.");
 
-        for (Entity root : game().getCurrentScene().getRootEntities()) {
-            renderer.startRendering();
-            renderVisit(root);
-            renderer.endRendering();
-        }
+        renderer.startRendering();
+        game().getCurrentScene().getRootEntities().forEach(this::renderVisit);
+        renderer.endRendering();
     }
 
     private void renderVisit(Entity node) {
