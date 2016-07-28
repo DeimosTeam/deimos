@@ -3,6 +3,7 @@ package deimos;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import deimos.listener.PostConfigHook;
 import org.joml.Vector2i;
 import org.joml.Vector3i;
 import org.joml.Vector4i;
@@ -41,10 +42,10 @@ public class ConfigLoader {
     }
 
     private final List<Field> fields = new ArrayList<>();
-    private final String clazzName;
+    private final Class<?> clazz;
 
     private ConfigLoader(Class<? extends Component> clazz) {
-        clazzName = clazz.getName();
+        this.clazz = clazz;
 
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getAnnotation(Property.class) != null) {
@@ -84,16 +85,19 @@ public class ConfigLoader {
     }
 
     private <T extends Component> Consumer<T> createLoaderFor(JsonObject config) {
-        JsonObject componentConfig = config.get(clazzName).getAsJsonObject();
+        JsonObject componentCfg = config.get(clazz.getName()).getAsJsonObject();
         List<Setter> setters = new ArrayList<>();
 
         for (Field field : fields) {
             Class<?> type = field.getType();
             Function<JsonElement, Object> valueGetter = getterFor(type);
 
-            Object value = valueGetter.apply(componentConfig.get(field.getName()));
+            Object value = valueGetter.apply(componentCfg.get(field.getName()));
             setters.add(ins -> field.set(ins, value));
         }
+        if (PostConfigHook.class.isAssignableFrom(clazz))
+            setters.add(ins -> ((PostConfigHook)ins).finalizeConfiguration(componentCfg));
+
         return instance -> {
             try {
                 for (Setter setter : setters)

@@ -1,0 +1,10 @@
+{
+  "entity": {
+    "components": {
+      "deimos.component.TestInitComponentHook": {
+        "x": 11,
+        "post": 22
+      }
+    }
+  }
+}

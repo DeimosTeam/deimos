@@ -3,6 +3,7 @@ package deimos;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import deimos.component.TestComponentWithVectors;
+import deimos.component.TestInitComponentHook;
 import deimos.component.TestPositionComponent;
 import org.joml.Vector2i;
 import org.joml.Vector3i;
@@ -66,6 +67,17 @@ public class StaticConfigurationTest {
 
         TestPositionComponent smallPos = small.getComponent(TestPositionComponent.class);
         smallPos.assertPosition(11, 22);
+    }
+
+    @Test
+    public void testPostConfigHook() {
+        Scene scene = initGameAndConfiguredScene("configurations/extra_config.json");
+        List<Entity> entities = scene.getEntitiesWith(TestInitComponentHook.class);
+        Assert.assertEquals(1, entities.size());
+
+        TestInitComponentHook component = entities.get(0).getComponent(TestInitComponentHook.class);
+        Assert.assertEquals(11, component.getX());
+        Assert.assertEquals(11 + 22, component.getCombined());
     }
 
     @Test
